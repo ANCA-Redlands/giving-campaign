@@ -33,9 +33,11 @@ window.CAMPAIGN = {
 
   // Zeffy form addresses. Paste each full link. Empty means the button is hidden on the live page.
   forms: {
-    yearEnd:       { url: '' },   // year-end form, Nov 17 to Dec 31
-    givingTuesday: { url: '' },   // one-day form, Dec 1
-    climateHero:   { url: '' },   // monthly giving, always available
+    // TEMPORARY: until separate forms exist, every button uses the one existing Zeffy form.
+    // To split later, paste each new form's link here and nothing else needs to change.
+    yearEnd:       { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // year-end, Nov 17 to Dec 31
+    givingTuesday: { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // one-day, Dec 1
+    climateHero:   { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // existing Climate Heroes form (monthly or one-time)
     guardian:      { url: '' }    // $1,000+ leadership gift (to confirm it exists)
   },
 
