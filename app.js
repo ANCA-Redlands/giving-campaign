@@ -142,10 +142,10 @@
     var url = isContact ? contactUrl() : giveUrl(w.form);
     if (w.hideIfSameAsMain && url && url === giveUrl('phase')) { return; }
     if (!url && isLive) { return; }
-    if (!url) { missing.push(isContact ? 'Contact email for "' + w.title + '" is empty (org.contactEmail).' : 'Form link missing for "' + w.title + '" (' + formKeyFor(w.form) + ').'); }
+    if (!url) { missing.push(isContact ? 'Contact email for "' + w.title + '" is empty (suggested: info@ancainlandempire.org).' : 'Form link missing for "' + w.title + '" (' + formKeyFor(w.form) + ').'); }
     var label = w.form === 'phase' ? phase.button : w.button;
     var h3 = el('h3'); h3.appendChild(document.createTextNode(w.title));
-    if (!isLive && w.confirm) { h3.appendChild(el('span', { class: 'flag', text: 'to confirm' })); missing.push('Confirm: ' + w.title + '. ' + w.confirm); }
+    if (!isLive && w.confirm) { h3.appendChild(el('span', { class: 'flag', text: 'to confirm' })); missing.push('Confirm: ' + w.title + '.' + (typeof w.confirm === 'string' ? ' ' + w.confirm : '')); }
     var body = w.text;
     if (isContact && org.mailingAddress) { body += ' To give by check, mail it to: ' + org.mailingAddress + '.'; }
     var btn = btnFromUrl(w.form === 'guardian' || isContact ? 'outline' : 'dark', label, url);
@@ -237,7 +237,7 @@
     });
     sp.wrap.appendChild(pg);
     main.appendChild(sp.node); addNav('programs', 'What we do');
-    if (!isLive && !(C.approved || {}).programs) { missing.push('"What ANCA does" descriptions are drawn from the Hub Programs page. Linda to confirm they are current.'); }
+    if (!isLive && !(C.approved || {}).programs) { missing.push('"What ANCA does" descriptions are drawn from the Hub Programs page. Confirm they are current.'); }
   }
 
   // supporters (names only)
@@ -305,7 +305,7 @@
     if (!a.theme) { missing.push('Theme is a placeholder. Milan to approve the final wording.'); }
     if (!a.need) { missing.push('Statement of need not yet approved.'); }
     if (!a.tax) { missing.push('Tax-deduction wording not yet confirmed with the CPA.'); }
-    if (!org.contactEmail) { missing.push('Contact email is empty (hidden until set).'); }
+    if (!org.contactEmail) { missing.push('Contact email is empty (hidden until set). We could create an email like donate@ancainlandempire.org or giving@ancainlandempire.org and link it to someone\'s email.'); }
     if (!(C.analytics && C.analytics.goatcounter)) { missing.push('Visit counting is off (optional).'); }
     if (/github\.io$/.test(location.hostname)) { missing.push('Still on the GitHub address. Do not put this link in public emails or posts until it is on the ANCA domain.'); }
     missing.push('Before going live: set status to "live" in config.js and remove the noindex line in index.html.');

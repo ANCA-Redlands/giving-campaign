@@ -73,7 +73,7 @@ window.CAMPAIGN = {
     { kicker: 'Leadership gift', title: 'ANCA Guardian',
       text: 'A gift of $1,000 or more at a critical time. Give by check, or talk with us about the best way to give.',
       form: 'contact', button: 'Talk to us about a leadership gift',
-      confirm: 'Who should receive these emails (org.contactEmail), and the mailing address for checks (org.mailingAddress).' },
+      confirm: true },   // true shows a "to confirm" flag. Set org.contactEmail and org.mailingAddress above when decided.
     { kicker: 'Any amount', title: 'Make a gift',
       text: 'Every contribution is welcome.',
       form: 'phase', button: 'Give today', hideIfSameAsMain: true }
