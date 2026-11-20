@@ -54,7 +54,21 @@ window.CAMPAIGN = {
   ],
 
   // Small line under the main button. Leave empty to hide.
-  heroNote: 'On the next page you can give once or monthly.',
+  heroNote: '100% of your gift goes to ANCA via Zeffy (zero platform fees). Give once or monthly.',
+
+  // Tangible gift anchors shown in the hero card so donors can picture what their gift supports.
+  // Set enabled: false to hide, or adjust amounts/labels once approved.
+  impactTiers: {
+    enabled: true,
+    heading: 'What your gift makes possible',
+    defaultAmount: 50,
+    tiers: [
+      { amount: 25,  label: 'Supports free monthly sustainability workshops and recorded community guides' },
+      { amount: 50,  label: 'Helps equip a Redlands block for Map Your Neighborhood emergency readiness' },
+      { amount: 100, label: 'Supplies tools and parts to keep household items out of landfills at Repair Cafe' },
+      { amount: 250, label: 'Sustains local tree planting, composting, and youth climate education all year' }
+    ]
+  },
 
   // The story of the need and the ask. Take it from Linda's approved letter. Empty hides the section.
   need: {

@@ -76,6 +76,7 @@
 
   /* ---------- build page ---------- */
   var app = document.getElementById('app');
+  app.innerHTML = ''; // replace static crawler fallback
   var theme = C.theme || {};
   var org = C.org || {};
   var missing = [];
@@ -88,14 +89,18 @@
     app.appendChild(rib);
   }
 
-  // header
+  // sticky header with persistent Give CTA
   var nav = el('nav', { 'aria-label': 'Page sections' });
+  var headerActions = el('div', { class: 'header-actions' }, [nav]);
+  var headerGiveBtn = giveButton('primary header-cta', phase.button || 'Give today', 'phase');
+  if (headerGiveBtn) { headerActions.appendChild(headerGiveBtn); }
+
   var header = el('header', { class: 'site-header' }, [el('div', { class: 'wrap' }, [
     el('a', { class: 'brand', href: org.home || '#', 'aria-label': (org.name || 'ANCA') + ' home page' }, [
       el('img', { src: 'assets/logo.png', alt: '', width: '48', height: '48' }),
       el('div', {}, [el('b', { text: org.name || 'ANCA Redlands' }), el('span', { text: org.tagline || '' })])
     ]),
-    nav
+    headerActions
   ])]);
   app.appendChild(header);
 
@@ -104,22 +109,83 @@
   var navItems = [];
   function addNav(id, label) { navItems.push([id, label]); }
 
-  // hero
+  // 1. HERO (2-column split on desktop when impactTiers enabled)
   var heroBtns = el('div', { class: 'cta-row' });
   var b1 = giveButton('primary', phase.button, 'phase');
   var heroUrl = giveUrl('climateHero');
   var b2 = (phase.form !== 'climateHero' && (!heroUrl || heroUrl !== giveUrl('phase'))) ? giveButton('ghost', 'Become a monthly Climate Hero', 'climateHero') : null;
   if (b1) { heroBtns.appendChild(b1); }
   if (b2) { heroBtns.appendChild(b2); }
-  main.appendChild(el('section', { class: 'hero' }, [el('div', { class: 'wrap' }, [
+
+  var heroLeft = el('div', { class: 'hero-copy' }, [
     el('span', { class: 'tag', text: phase.tag }),
     el('h1', { text: theme.headline || '' }),
     el('p', { class: 'sub', text: theme.subline || '' }),
     heroBtns,
     C.heroNote ? el('p', { class: 'hero-note', text: C.heroNote }) : null
-  ])]));
+  ]);
 
-  // need
+  var impact = C.impactTiers || {};
+  var heroGridKids = [heroLeft];
+
+  if (impact.enabled && Array.isArray(impact.tiers) && impact.tiers.length) {
+    var selectedAmt = impact.defaultAmount || impact.tiers[0].amount;
+    var descEl = el('p', { class: 'impact-desc' });
+    var tierRow = el('div', { class: 'tier-pills', role: 'group', 'aria-label': 'Select a sample gift amount' });
+    var pillBtns = [];
+
+    function selectTier(tier) {
+      selectedAmt = tier.amount;
+      descEl.textContent = tier.label;
+      pillBtns.forEach(function (pb) {
+        var active = Number(pb.getAttribute('data-amt')) === selectedAmt;
+        pb.classList.toggle('active', active);
+        pb.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    }
+
+    impact.tiers.forEach(function (tier) {
+      var pb = el('button', {
+        type: 'button',
+        class: 'tier-pill',
+        'data-amt': String(tier.amount),
+        text: '$' + tier.amount
+      });
+      pb.addEventListener('click', function () { selectTier(tier); });
+      pillBtns.push(pb);
+      tierRow.appendChild(pb);
+    });
+
+    var customPill = el('button', {
+      type: 'button',
+      class: 'tier-pill',
+      'data-amt': '0',
+      text: 'Other'
+    });
+    customPill.addEventListener('click', function () {
+      selectTier({ amount: 0, label: 'Every dollar supports neighbor-led climate resilience right here in Redlands.' });
+    });
+    pillBtns.push(customPill);
+    tierRow.appendChild(customPill);
+
+    var initialTier = impact.tiers.filter(function (t) { return t.amount === selectedAmt; })[0] || impact.tiers[0];
+    selectTier(initialTier);
+
+    var cardCta = giveButton('primary full-btn', (phase.button || 'Give today') + ' via Zeffy', 'phase');
+    var impactCard = el('aside', { class: 'hero-card', 'aria-label': 'Gift impact preview' }, [
+      el('div', { class: 'hero-card-kicker', text: impact.heading || 'What your gift makes possible' }),
+      tierRow,
+      descEl,
+      cardCta,
+      el('div', { class: 'hero-card-trust', text: '501(c)(3) tax-deductible · Zero platform fees' })
+    ]);
+    heroGridKids.push(impactCard);
+  }
+
+  var heroInner = el('div', { class: heroGridKids.length > 1 ? 'wrap hero-grid' : 'wrap' }, heroGridKids);
+  main.appendChild(el('section', { class: 'hero' }, [heroInner]));
+
+  // 2. WHY WE ARE ASKING (Need)
   var need = C.need || {};
   var needParas = (need.paragraphs || []).filter(Boolean);
   if (needParas.length) {
@@ -135,7 +201,7 @@
     missing.push('Statement of need (from Linda\'s letter) is empty.');
   }
 
-  // ways to give
+  // 3. WAYS TO GIVE
   var cards = [];
   (C.ways || []).forEach(function (w) {
     var isContact = w.form === 'contact';
@@ -154,24 +220,41 @@
     ]));
   });
   if (cards.length) {
-    var sw = section('give', '', 'Ways to give');
-    var g = el('div', { class: 'grid3' }); cards.forEach(function (c) { g.appendChild(c); });
+    var sw = section('give', '', 'Ways to give', 'Choose one-time support, steady monthly backing, or a leadership gift.');
+    var gridCls = cards.length === 2 ? 'grid2' : 'grid3';
+    var g = el('div', { class: gridCls }); cards.forEach(function (c) { g.appendChild(c); });
     sw.wrap.appendChild(g);
     main.appendChild(sw.node); addNav('give', 'Ways to give');
   }
 
-  // challenges
+  // 4. WHAT ANCA DOES (Programs — moved above Challenges so donors see impact before seasonal calendar)
+  var pr = C.programs || {};
+  var items = (pr.items || []).filter(function (x) { return x && x.title; });
+  if (pr.enabled && items.length) {
+    var sp = section('programs', 'alt', pr.heading || 'What ANCA does', pr.intro || 'Neighbor-led programs building a cleaner, safer, more connected Redlands.');
+    var pg = el('div', { class: 'grid2' });
+    items.forEach(function (it) {
+      var h = el('h3'); h.appendChild(document.createTextNode(it.title));
+      if (!isLive && it.confirm) { h.appendChild(el('span', { class: 'flag', text: 'to confirm' })); missing.push('Confirm: ' + it.title + '. ' + it.confirm); }
+      pg.appendChild(el('article', { class: 'card' }, [h, el('p', { text: it.text || '' }), it.url ? el('a', { class: 'more', href: it.url, rel: 'noopener', text: 'Learn more →' }) : null]));
+    });
+    sp.wrap.appendChild(pg);
+    main.appendChild(sp.node); addNav('programs', 'What we do');
+    if (!isLive && !(C.approved || {}).programs) { missing.push('"What ANCA does" descriptions are drawn from the Hub Programs page. Confirm they are current.'); }
+  }
+
+  // 5. CHALLENGES (Goal bar, 12 Days, Match)
   var td = C.twelveDays || {};
   var goal = C.goal || {};
   var match = C.match || {};
   if (td.enabled || goal.enabled || match.enabled) {
-    var sc = section('challenges', 'alt', 'Challenges');
+    var sc = section('challenges', '', 'Challenges');
     if (goal.enabled && goal.target > 0) {
       var pct = Math.max(0, Math.min(100, Math.round((goal.raised / goal.target) * 100)));
       var money = function (n) { return '$' + Number(n).toLocaleString('en-US'); };
       var bar = el('div', { class: 'bar', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(pct), 'aria-label': 'Progress toward goal' }, [el('i', { style: 'width:' + pct + '%' })]);
       var prog = el('div', { class: 'progress' }, [
-        el('div', { class: 'row' }, [el('span', { text: goal.name || 'Current goal' }), el('span', { text: money(goal.raised) + ' of ' + money(goal.target) })]),
+        el('div', { class: 'row' }, [el('span', { text: goal.name || 'Current goal' }), el('span', { text: money(goal.raised) + ' of ' + money(goal.target) + ' (' + pct + '%)' })]),
         bar,
         goal.updated ? el('small', { text: 'Updated ' + goal.updated }) : null
       ]);
@@ -198,7 +281,9 @@
         var isGift = (td.givingPromptDays || []).indexOf(i) !== -1;
         var opened = iso <= today;
         var cls = 'day' + (isGift ? ' gift' : '') + (iso < today ? ' past' : '') + (iso === today ? ' today' : '') + (opened ? '' : ' closed');
-        var kids = [el('b', { text: 'Day ' + i }), el('span', { text: shortDate(iso) })];
+        var kids = [
+          el('div', { class: 'day-head' }, [el('b', { text: 'Day ' + i }), el('span', { text: shortDate(iso) })])
+        ];
         if (opened) {
           kids.push(el('em', { text: title }));
           if (entry.text) { kids.push(el('p', { text: entry.text })); }
@@ -224,23 +309,7 @@
     main.appendChild(sc.node); addNav('challenges', 'Challenges');
   }
 
-  // what ANCA does (no numbers)
-  var pr = C.programs || {};
-  var items = (pr.items || []).filter(function (x) { return x && x.title; });
-  if (pr.enabled && items.length) {
-    var sp = section('programs', '', pr.heading || 'What ANCA does', pr.intro || '');
-    var pg = el('div', { class: 'grid3' });
-    items.forEach(function (it) {
-      var h = el('h3'); h.appendChild(document.createTextNode(it.title));
-      if (!isLive && it.confirm) { h.appendChild(el('span', { class: 'flag', text: 'to confirm' })); missing.push('Confirm: ' + it.title + '. ' + it.confirm); }
-      pg.appendChild(el('article', { class: 'card' }, [h, el('p', { text: it.text || '' }), it.url ? el('a', { class: 'more', href: it.url, text: 'Learn more' }) : null]));
-    });
-    sp.wrap.appendChild(pg);
-    main.appendChild(sp.node); addNav('programs', 'What we do');
-    if (!isLive && !(C.approved || {}).programs) { missing.push('"What ANCA does" descriptions are drawn from the Hub Programs page. Confirm they are current.'); }
-  }
-
-  // supporters (names only)
+  // 6. SUPPORTERS (names only)
   var sup = C.supporters || {};
   var names = (sup.names || []).filter(Boolean);
   if (names.length) {
@@ -252,7 +321,7 @@
     main.appendChild(ssn.node); addNav('supporters', 'Supporters');
   }
 
-  // help
+  // 7. OTHER WAYS TO HELP
   var helpBtns = [];
   (C.help || []).forEach(function (h) {
     if (h.url === 'share') {
@@ -261,25 +330,25 @@
         var shareUrl = location.origin + location.pathname;
         if (navigator.share) { navigator.share({ title: document.title, url: shareUrl }).catch(function () {}); return; }
         if (navigator.clipboard) {
-          navigator.clipboard.writeText(shareUrl).then(function () { sb.textContent = 'Link copied'; setTimeout(function () { sb.textContent = h.label; }, 2200); });
+          navigator.clipboard.writeText(shareUrl).then(function () { sb.textContent = 'Link copied!'; setTimeout(function () { sb.textContent = h.label; }, 2200); });
         }
       });
       helpBtns.push(sb);
     } else if (h.url) {
-      helpBtns.push(el('a', { class: 'btn outline', href: h.url, text: h.label }));
+      helpBtns.push(el('a', { class: 'btn outline', href: h.url, rel: 'noopener', text: h.label }));
     } else if (!isLive) {
       helpBtns.push(el('a', { class: 'btn outline', 'aria-disabled': 'true', role: 'link', title: 'Link not set yet', text: h.label }));
       missing.push('Link missing for "' + h.label + '" button (Other ways to help).');
     }
   });
   if (helpBtns.length) {
-    var sh = section('help', 'alt', 'Other ways to help', 'Not ready to give? These count too.');
+    var sh = section('help', 'alt', 'Other ways to help', 'Not ready to give? Showing up and spreading the word count too.');
     var hb = el('div', { class: 'help' }); helpBtns.forEach(function (b) { hb.appendChild(b); });
     sh.wrap.appendChild(hb);
     main.appendChild(sh.node); addNav('help', 'Other ways to help');
   }
 
-  // footer
+  // FOOTER
   var f = C.footer || {};
   var col1 = el('div', {}, [el('strong', { text: org.name || '' }), el('br'), document.createTextNode(org.tagline || '')]);
   if (org.mailingAddress) { col1.appendChild(el('br')); col1.appendChild(document.createTextNode(org.mailingAddress)); }
@@ -292,7 +361,7 @@
     if (soc[p[0]]) { socKids.push(el('a', { href: soc[p[0]], rel: 'noopener', text: p[1] })); }
   });
   if (socKids.length) { var sd = el('div', { class: 'social' }); socKids.forEach(function (k) { sd.appendChild(k); }); col3.appendChild(el('br')); col3.appendChild(sd); }
-  col3.appendChild(el('br')); col3.appendChild(el('a', { href: '#main', text: 'Back to top' }));
+  col3.appendChild(el('br')); col3.appendChild(el('a', { href: '#main', text: 'Back to top ↑' }));
   app.appendChild(el('footer', {}, [el('div', { class: 'wrap cols' }, [col1, col2, col3])]));
 
   // nav links

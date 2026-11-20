@@ -28,7 +28,7 @@ A single-page site for ANCA's giving campaigns. It is plain files (no build step
 - **The 12 Days** (`twelveDays.entries`): add one entry per day, keyed by day number, for example `3: { title: 'Title', text: 'One or two sentences.', action: 'One thing to try.' }`. Each day opens on its date and shows its content. Future days show only the date. Days listed in `givingPromptDays` show a Give button on their own day. In draft mode, the "Preview a day" links show how any day will look.
 - **What ANCA does** (`programs.items`): short descriptions of running programs, drawn from the Hub Programs page. No numbers. Set `approved.programs` to `true` once Linda confirms them.
 - **Leadership gift:** set `org.contactEmail` (who receives the emails) and `org.mailingAddress` (for checks). Until the email is set, the card is hidden on the live page.
-- **Supporters** (`supporters.names`): names only, no amounts. Add only people who agreed to be named. The section stays hidden while the list is empty.
+- **Supporters** (`supporters.names`): optional and off for now. If ANCA later wants a thank-you list of recent givers, add names only, no amounts, and only people who agreed to be named. The section stays hidden while the list is empty, and the draft checklist does not mention it.
 - **Social links** are already set to ANCA's Facebook and Instagram pages from the Hub site. Add LinkedIn when it exists.
 
 ## Updating the page
