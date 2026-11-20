@@ -115,7 +115,8 @@
     el('span', { class: 'tag', text: phase.tag }),
     el('h1', { text: theme.headline || '' }),
     el('p', { class: 'sub', text: theme.subline || '' }),
-    heroBtns
+    heroBtns,
+    C.heroNote ? el('p', { class: 'hero-note', text: C.heroNote }) : null
   ])]));
 
   // need

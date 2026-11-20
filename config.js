@@ -53,6 +53,9 @@ window.CAMPAIGN = {
     { id: 'yearEnd',       from: '2000-01-01', to: '2099-12-31', form: 'yearEnd',       tag: 'Year-end campaign', button: 'Give today' }
   ],
 
+  // Small line under the main button. Leave empty to hide.
+  heroNote: 'On the next page you can give once or monthly.',
+
   // The story of the need and the ask. Take it from Linda's approved letter. Empty hides the section.
   need: {
     heading: 'Why we are asking',
@@ -65,8 +68,8 @@ window.CAMPAIGN = {
   //   hideIfSameAsMain = hide this card while it would repeat the main button's link
   ways: [
     { kicker: 'Monthly', title: 'Become a Climate Hero',
-      text: 'Steady monthly support lets ANCA plan ahead and keep neighborhood work going all year.',
-      form: 'climateHero', button: 'Give monthly' },
+      text: 'Steady monthly support lets ANCA plan ahead and keep neighborhood work going all year. One-time gifts are just as welcome on the same page.',
+      form: 'climateHero', button: 'Give monthly or one time' },
     { kicker: 'Leadership gift', title: 'ANCA Guardian',
       text: 'A gift of $1,000 or more at a critical time. Give by check, or talk with us about the best way to give.',
       form: 'contact', button: 'Talk to us about a leadership gift',
