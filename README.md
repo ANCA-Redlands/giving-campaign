@@ -21,6 +21,16 @@ A single-page site for ANCA's giving campaigns. It is plain files (no build step
 - **Previewing.** Add `?date=2026-12-01` to the address to see another day. Add `?src=facebook` to see a source tag. Both work in draft and live mode.
 - **Source tags.** Any `?src=` (or `?utm_source=`) on the page address is added to the Zeffy links as `utm_source`, along with `utm_campaign`. Whether Zeffy records these has not been confirmed. Test one gift, and check the export, before relying on it.
 
+
+## Content you can add in config.js
+
+- **Why we are asking** (`need.paragraphs`): one string per paragraph, from Linda's approved letter.
+- **The 12 Days** (`twelveDays.entries`): add one entry per day, keyed by day number, for example `3: { title: 'Title', text: 'One or two sentences.', action: 'One thing to try.' }`. Each day opens on its date and shows its content. Future days show only the date. Days listed in `givingPromptDays` show a Give button on their own day. In draft mode, the "Preview a day" links show how any day will look.
+- **What ANCA does** (`programs.items`): short descriptions of running programs, drawn from the Hub Programs page. No numbers. Set `approved.programs` to `true` once Linda confirms them.
+- **Leadership gift:** set `org.contactEmail` (who receives the emails) and `org.mailingAddress` (for checks). Until the email is set, the card is hidden on the live page.
+- **Supporters** (`supporters.names`): names only, no amounts. Add only people who agreed to be named. The section stays hidden while the list is empty.
+- **Social links** are already set to ANCA's Facebook and Instagram pages from the Hub site. Add LinkedIn when it exists.
+
 ## Updating the page
 
 1. Open `config.js` in GitHub and click the pencil icon.

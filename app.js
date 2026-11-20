@@ -63,11 +63,15 @@
     } catch (e) { return f.url; }
   }
 
-  function giveButton(cls, label, key) {
-    var url = giveUrl(key);
+  function btnFromUrl(cls, label, url) {
     if (url) { return el('a', { class: 'btn ' + cls, href: url, rel: 'noopener', text: label }); }
     if (isLive) { return null; }
-    return el('a', { class: 'btn ' + cls, 'aria-disabled': 'true', role: 'link', title: 'Form link not set yet', text: label });
+    return el('a', { class: 'btn ' + cls, 'aria-disabled': 'true', role: 'link', title: 'Link not set yet', text: label });
+  }
+  function giveButton(cls, label, key) { return btnFromUrl(cls, label, giveUrl(key)); }
+  function contactUrl() {
+    var e = (C.org || {}).contactEmail;
+    return e ? 'mailto:' + e : '';
   }
 
   /* ---------- build page ---------- */
@@ -103,7 +107,8 @@
   // hero
   var heroBtns = el('div', { class: 'cta-row' });
   var b1 = giveButton('primary', phase.button, 'phase');
-  var b2 = phase.form !== 'climateHero' ? giveButton('ghost', 'Become a monthly Climate Hero', 'climateHero') : null;
+  var heroUrl = giveUrl('climateHero');
+  var b2 = (phase.form !== 'climateHero' && (!heroUrl || heroUrl !== giveUrl('phase'))) ? giveButton('ghost', 'Become a monthly Climate Hero', 'climateHero') : null;
   if (b1) { heroBtns.appendChild(b1); }
   if (b2) { heroBtns.appendChild(b2); }
   main.appendChild(el('section', { class: 'hero' }, [el('div', { class: 'wrap' }, [
@@ -132,16 +137,19 @@
   // ways to give
   var cards = [];
   (C.ways || []).forEach(function (w) {
-    var url = giveUrl(w.form);
+    var isContact = w.form === 'contact';
+    var url = isContact ? contactUrl() : giveUrl(w.form);
+    if (w.hideIfSameAsMain && url && url === giveUrl('phase')) { return; }
     if (!url && isLive) { return; }
-    if (!url) { missing.push('Form link missing for "' + w.title + '" (' + formKeyFor(w.form) + ').'); }
+    if (!url) { missing.push(isContact ? 'Contact email for "' + w.title + '" is empty (org.contactEmail).' : 'Form link missing for "' + w.title + '" (' + formKeyFor(w.form) + ').'); }
     var label = w.form === 'phase' ? phase.button : w.button;
-    var h3kids = [document.createTextNode(w.title)];
-    if (!isLive && w.confirm) { h3kids.push(el('span', { class: 'flag', text: 'to confirm' })); }
-    var h3 = el('h3'); h3kids.forEach(function (k) { h3.appendChild(k); });
-    var btn = giveButton(w.form === 'guardian' ? 'outline' : 'dark', label, w.form);
+    var h3 = el('h3'); h3.appendChild(document.createTextNode(w.title));
+    if (!isLive && w.confirm) { h3.appendChild(el('span', { class: 'flag', text: 'to confirm' })); missing.push('Confirm: ' + w.title + '. ' + w.confirm); }
+    var body = w.text;
+    if (isContact && org.mailingAddress) { body += ' To give by check, mail it to: ' + org.mailingAddress + '.'; }
+    var btn = btnFromUrl(w.form === 'guardian' || isContact ? 'outline' : 'dark', label, url);
     cards.push(el('article', { class: 'card' }, [
-      el('div', { class: 'kicker', text: w.kicker }), h3, el('p', { text: w.text }), btn
+      el('div', { class: 'kicker', text: w.kicker }), h3, el('p', { text: body }), btn
     ]));
   });
   if (cards.length) {
@@ -172,16 +180,35 @@
       var end = addDays(td.start, td.days - 1);
       sc.wrap.appendChild(el('h3', { text: 'The 12 Days, ' + shortDate(td.start) + ' to ' + shortDate(end).replace(/^\w+ /, '') }));
       sc.wrap.appendChild(el('p', { class: 'lead', text: (td.intro || '') + ' A giving prompt appears on a few of the days, and the days around December 24 and 25 stay light.' }));
+      if (!isLive) {
+        var pv = el('p', { class: 'preview' });
+        pv.appendChild(document.createTextNode('Preview a day: '));
+        for (var k = 1; k <= td.days; k++) {
+          var pu = new URLSearchParams(location.search); pu.set('date', addDays(td.start, k - 1));
+          pv.appendChild(el('a', { href: '?' + pu.toString() + '#challenges', text: 'Day ' + k }));
+        }
+        sc.wrap.appendChild(pv);
+      }
       var list = el('ol', { class: 'days' });
       for (var i = 1; i <= td.days; i++) {
         var iso = addDays(td.start, i - 1);
-        var title = (td.titles && td.titles[i]) || (td.blockPrefix + ' ' + (i - 1));
+        var entry = (td.entries && td.entries[i]) || {};
+        var title = entry.title || (td.titles && td.titles[i]) || (td.blockPrefix + ' ' + (i - 1));
         var isGift = (td.givingPromptDays || []).indexOf(i) !== -1;
-        var cls = 'day' + (isGift ? ' gift' : '') + (iso < today ? ' past' : '') + (iso === today ? ' today' : '');
-        var li = el('li', { class: cls }, [
-          el('b', { text: 'Day ' + i }), el('span', { text: shortDate(iso) }), el('em', { text: title }),
-          isGift ? el('span', { text: 'Giving prompt' }) : null
-        ]);
+        var opened = iso <= today;
+        var cls = 'day' + (isGift ? ' gift' : '') + (iso < today ? ' past' : '') + (iso === today ? ' today' : '') + (opened ? '' : ' closed');
+        var kids = [el('b', { text: 'Day ' + i }), el('span', { text: shortDate(iso) })];
+        if (opened) {
+          kids.push(el('em', { text: title }));
+          if (entry.text) { kids.push(el('p', { text: entry.text })); }
+          if (entry.action) { kids.push(el('p', { class: 'try', text: 'Try this: ' + entry.action })); }
+          if (!entry.text && !isLive) { kids.push(el('p', { class: 'todo', text: 'Content to come' })); }
+          if (isGift) { kids.push(el('span', { class: 'prompt', text: 'Giving prompt' })); }
+          if (isGift && iso === today) { var gb = giveButton('dark small', td.promptButton || 'Give today', 'phase'); if (gb) { kids.push(gb); } }
+        } else {
+          kids.push(el('em', { text: 'Opens ' + shortDate(iso) }));
+        }
+        var li = el('li', { class: cls }, kids);
         if (iso === today) { li.setAttribute('aria-current', 'date'); }
         list.appendChild(li);
       }
@@ -196,18 +223,32 @@
     main.appendChild(sc.node); addNav('challenges', 'Challenges');
   }
 
-  // stats
-  var stats = (C.stats || []).filter(function (s) { return s && s.value; });
-  if (stats.length) {
-    var ss = section('impact', '', 'What ANCA does');
-    var sg = el('div', { class: 'stats' });
-    stats.slice(0, 3).forEach(function (s) {
-      sg.appendChild(el('div', { class: 'stat' }, [el('strong', { text: s.value }), el('span', { text: s.label || '' }), s.source ? el('small', { text: 'Source: ' + s.source }) : null]));
+  // what ANCA does (no numbers)
+  var pr = C.programs || {};
+  var items = (pr.items || []).filter(function (x) { return x && x.title; });
+  if (pr.enabled && items.length) {
+    var sp = section('programs', '', pr.heading || 'What ANCA does', pr.intro || '');
+    var pg = el('div', { class: 'grid3' });
+    items.forEach(function (it) {
+      var h = el('h3'); h.appendChild(document.createTextNode(it.title));
+      if (!isLive && it.confirm) { h.appendChild(el('span', { class: 'flag', text: 'to confirm' })); missing.push('Confirm: ' + it.title + '. ' + it.confirm); }
+      pg.appendChild(el('article', { class: 'card' }, [h, el('p', { text: it.text || '' }), it.url ? el('a', { class: 'more', href: it.url, text: 'Learn more' }) : null]));
     });
-    ss.wrap.appendChild(sg);
-    main.appendChild(ss.node); addNav('impact', 'Our work');
-  } else if (!isLive) {
-    missing.push('Impact numbers: add up to three verified numbers, each with a source (optional section, hidden until filled).');
+    sp.wrap.appendChild(pg);
+    main.appendChild(sp.node); addNav('programs', 'What we do');
+    if (!isLive && !(C.approved || {}).programs) { missing.push('"What ANCA does" descriptions are drawn from the Hub Programs page. Linda to confirm they are current.'); }
+  }
+
+  // supporters (names only)
+  var sup = C.supporters || {};
+  var names = (sup.names || []).filter(Boolean);
+  if (names.length) {
+    var ssn = section('supporters', 'alt', sup.heading || 'Our supporters', sup.intro || '');
+    var nl = el('ul', { class: 'names' });
+    names.forEach(function (n) { nl.appendChild(el('li', { text: n })); });
+    ssn.wrap.appendChild(nl);
+    if (sup.note) { ssn.wrap.appendChild(el('p', { class: 'lead', text: sup.note })); }
+    main.appendChild(ssn.node); addNav('supporters', 'Supporters');
   }
 
   // help

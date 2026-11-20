@@ -17,13 +17,17 @@ window.CAMPAIGN = {
     name: 'ANCA Redlands',
     tagline: 'Accelerate Neighborhood Climate Action',
     home: 'https://www.ancaredlands.org',
-    contactEmail: '',      // example: 'info@example.org'. Leave empty to hide.
-    mailingAddress: '',    // one line. Leave empty to hide.
-    social: { facebook: '', instagram: '', linkedin: '' }
+    contactEmail: '',      // used by the leadership gift button. Leave empty to hide it.
+    mailingAddress: '',    // one line, used for the "give by check" note. Leave empty to hide.
+    social: {
+      facebook: 'https://www.facebook.com/ancaredlands',
+      instagram: 'https://www.instagram.com/ancaredlands/',
+      linkedin: ''
+    }
   },
 
   // Flip these to true as each item is approved. Draft mode lists what is still open.
-  approved: { theme: false, need: false, tax: false },
+  approved: { theme: false, need: false, tax: false, programs: false },
 
   // Placeholder theme (Linda's suggestion). Milan decides the final wording.
   theme: {
@@ -38,7 +42,7 @@ window.CAMPAIGN = {
     yearEnd:       { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // year-end, Nov 17 to Dec 31
     givingTuesday: { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // one-day, Dec 1
     climateHero:   { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // existing Climate Heroes form (monthly or one-time)
-    guardian:      { url: '' }    // $1,000+ leadership gift (to confirm it exists)
+    guardian:      { url: '' }    // not used while the leadership gift is contact and check
   },
 
   // Which form the main button uses, by date. The first matching row wins.
@@ -55,45 +59,74 @@ window.CAMPAIGN = {
     paragraphs: []
   },
 
-  // Ways to give. form: 'phase' follows the date rule above.
+  // Ways to give.
+  //   form 'phase'   = follows the date rule above
+  //   form 'contact' = opens an email to org.contactEmail (for leadership gifts and checks)
+  //   hideIfSameAsMain = hide this card while it would repeat the main button's link
   ways: [
     { kicker: 'Monthly', title: 'Become a Climate Hero',
       text: 'Steady monthly support lets ANCA plan ahead and keep neighborhood work going all year.',
       form: 'climateHero', button: 'Give monthly' },
     { kicker: 'Leadership gift', title: 'ANCA Guardian',
-      text: 'A gift of $1,000 or more at a critical time.',
-      form: 'guardian', button: 'Give as a Guardian', confirm: 'To confirm with Milan that this form exists.' },
+      text: 'A gift of $1,000 or more at a critical time. Give by check, or talk with us about the best way to give.',
+      form: 'contact', button: 'Talk to us about a leadership gift',
+      confirm: 'Who should receive these emails (org.contactEmail), and the mailing address for checks (org.mailingAddress).' },
     { kicker: 'Any amount', title: 'Make a gift',
       text: 'Every contribution is welcome.',
-      form: 'phase', button: 'Give today' }
+      form: 'phase', button: 'Give today', hideIfSameAsMain: true }
   ],
 
   // Optional goal display, updated by hand for now. Turn on when a goal is ready.
   goal: { enabled: false, name: '', raised: 0, target: 0, updated: '' },
 
+  // The 12 Days. Each day opens on its date and shows its content. Future days show only the date.
+  // Add content as entries keyed by day number: 1: { title: '', text: '', action: '' }
   twelveDays: {
     enabled: true,
     start: '2026-12-20',
     days: 12,
     blockPrefix: 'Building Block',
     titles: { 1: 'Why neighbors', 12: 'Thank you' },
-    givingPromptDays: [3, 8, 10, 12],
-    intro: 'One idea a day on building a resilient community.'
+    givingPromptDays: [3, 8, 10, 12],   // days that show a Give button
+    promptButton: 'Give today',
+    intro: 'One idea a day on building a resilient community.',
+    entries: {}
   },
 
   // Only used if a matcher is found. Turn on and fill in.
   match: { enabled: false, matched: '', cap: '', window: '', howCounted: '', announcement: '' },
 
-  // Up to three verified numbers, each with a source. Empty hides the section.
-  // Example: { value: '123', label: 'neighbors reached', source: 'Where this number comes from' }
-  stats: [],
+  // What ANCA does, in words. Drawn from the Programs page on the Hub. Linda to confirm they are current.
+  // Each item: title, text, url (optional "Learn more" link), confirm (a note shown only in draft).
+  programs: {
+    enabled: true,
+    heading: 'What ANCA does',
+    intro: '',
+    items: [
+      { title: 'Monthly education',
+        text: 'Programs on living more sustainably, often followed by hands-on time with composting, gardening, or tree planting. Past workshops are recorded.',
+        url: 'https://redlands-anca.hub.arcgis.com/pages/programs' },
+      { title: 'Map Your Neighborhood',
+        text: 'Neighbors come together, get to know one another, and turn a conversation about preparedness into a plan.',
+        url: 'https://redlands-anca.hub.arcgis.com/pages/our-neighborhoods' },
+      { title: 'Repair Cafe',
+        text: 'Neighbors share skills and fix what they own instead of throwing it away.',
+        url: 'https://redlands-anca.hub.arcgis.com/pages/upcoming-events' },
+      { title: 'Day of Climate Action',
+        text: 'An Earth Day celebration where local businesses and organizations host projects that help residents learn sustainable ways to live.',
+        url: 'https://redlands-anca.hub.arcgis.com/pages/programs',
+        confirm: 'The Hub page says this launched in 2023. Confirm it is still held each year.' }
+    ]
+  },
 
-  // Other ways to help. Empty url hides the button on the live page.
+  // Names only, no amounts. Only list people who agreed to be named. Empty hides the section.
+  supporters: { heading: 'Our supporters', intro: '', names: [], note: '' },
+
+  // Other ways to help. Empty url hides the button on the live page. 'share' copies or shares this page's link.
   help: [
-    { label: 'Volunteer',        url: '' },
-    { label: 'Share this page',  url: 'share' },
-    { label: 'Join an event',    url: '' },
-    { label: 'Business support', url: '' }
+    { label: 'Volunteer',       url: 'https://redlands-anca.hub.arcgis.com/pages/get-involved' },
+    { label: 'Join an event',   url: 'https://redlands-anca.hub.arcgis.com/pages/upcoming-events' },
+    { label: 'Share this page', url: 'share' }
   ],
 
   footer: {
