@@ -37,12 +37,10 @@ window.CAMPAIGN = {
 
   // Zeffy form addresses. Paste each full link. Empty means the button is hidden on the live page.
   forms: {
-    // TEMPORARY: until separate forms exist, every button uses the one existing Zeffy form.
-    // To split later, paste each new form's link here and nothing else needs to change.
-    yearEnd:       { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // year-end, Nov 17 to Dec 31
-    givingTuesday: { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // one-day, Dec 1
-    climateHero:   { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // existing Climate Heroes form (monthly or one-time)
-    guardian:      { url: '' }    // not used while the leadership gift is contact and check
+    yearEnd:       { url: 'https://www.zeffy.com/en-US/donation-form/give-today-16' },   // year-end & single gift form
+    givingTuesday: { url: 'https://www.zeffy.com/en-US/donation-form/give-today-16' },   // Giving Tuesday (Dec 1)
+    climateHero:   { url: 'https://www.zeffy.com/en-US/donation-form/join-the-movement-for-a-climate-resilient-future' },   // Climate Heroes monthly form
+    guardian:      { url: 'https://www.zeffy.com/en-US/donation-form/anca-guardian' }    // ANCA Guardian leadership gift ($1,000+)
   },
 
   // Which form the main button uses, by date. The first matching row wins.
@@ -85,9 +83,8 @@ window.CAMPAIGN = {
       text: 'Steady monthly support lets ANCA plan ahead and keep neighborhood work going all year. One-time gifts are just as welcome on the same page.',
       form: 'climateHero', button: 'Give monthly or one time' },
     { kicker: 'Leadership gift', title: 'ANCA Guardian',
-      text: 'A gift of $1,000 or more at a critical time. Give by check, or talk with us about the best way to give.',
-      form: 'contact', button: 'Talk to us about a leadership gift',
-      confirm: true },   // true shows a "to confirm" flag. Set org.contactEmail and org.mailingAddress above when decided.
+      text: 'A gift of $1,000 or more at a critical time. Give online via Zeffy with zero fees, or contact us to give by check.',
+      form: 'guardian', button: 'Become an ANCA Guardian' },
     { kicker: 'Any amount', title: 'Make a gift',
       text: 'Every contribution is welcome.',
       form: 'phase', button: 'Give today', hideIfSameAsMain: true }
