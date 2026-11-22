@@ -104,7 +104,7 @@ window.CAMPAIGN = {
     start: '2026-12-20',
     days: 12,
     blockPrefix: 'Building Block',
-    givingPromptDays: [2, 9, 12],   // days that show a Give button. Day 2 Food, Day 9 Zero Waste (Repair Café), Day 12 Thank you. Days 5 and 6 (Dec 24, 25) stay light.
+    givingPromptDays: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],   // every day shows a Give button on its own date, so one list covers the whole run. Remove a number to drop that day's button.
     promptButton: 'Give today',
     intro: 'One idea a day on building a resilient community, from food and water to shade and neighbors.',
     entries: {
