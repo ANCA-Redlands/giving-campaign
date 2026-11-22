@@ -9,7 +9,7 @@ window.CAMPAIGN = {
   campaignId: 'yearend-2026',
 
   // 'draft' shows a review ribbon and a setup checklist. 'live' removes both.
-  status: 'draft',
+  status: 'live',
 
   timezone: 'America/Los_Angeles',
 
@@ -27,7 +27,7 @@ window.CAMPAIGN = {
   },
 
   // Flip these to true as each item is approved. Draft mode lists what is still open.
-  approved: { theme: false, need: false, tax: false, programs: false },
+  approved: { theme: false, need: true, tax: false, programs: true },   // need and programs use Linda's draft copy. Tax wording is not on the page; add it only after the CPA confirms.,
 
   // Placeholder theme (Linda's suggestion). Milan decides the final wording.
   theme: {
@@ -52,7 +52,7 @@ window.CAMPAIGN = {
   ],
 
   // Small line under the main button. Leave empty to hide.
-  heroNote: '100% of your gift goes to ANCA via Zeffy (zero platform fees). Give once or monthly.',
+  heroNote: 'On the next page you can give once or monthly.',
 
   // Tangible gift anchors shown in the hero card so donors can picture what their gift supports.
   // Set enabled: false to hide, or adjust amounts/labels once approved.
@@ -61,29 +61,33 @@ window.CAMPAIGN = {
     heading: 'What your gift makes possible',
     defaultAmount: 50,
     tiers: [
-      { amount: 25,  label: 'Supports free monthly sustainability workshops and recorded community guides' },
-      { amount: 50,  label: 'Helps equip a Redlands block for Map Your Neighborhood emergency readiness' },
-      { amount: 100, label: 'Supplies tools and parts to keep household items out of landfills at Repair Cafe' },
-      { amount: 250, label: 'Sustains local tree planting, composting, and youth climate education all year' }
+      { amount: 25,  label: 'Provides program materials for 2 Speakers\u2019 Series events.' },
+      { amount: 50,  label: 'Supplies Map Your Neighborhood workbooks for one neighborhood.' },
+      { amount: 100, label: 'Covers expenses for 3 Map Your Neighborhood follow-up meetings that help neighborhoods strengthen their plans and get better acquainted.' },
+      { amount: 250, label: 'Gets one more neighborhood disaster-prepared with a Map Your Neighborhood event.' }
     ]
   },
 
   // The story of the need and the ask. Take it from Linda's approved letter. Empty hides the section.
   need: {
     heading: 'Why we are asking',
-    paragraphs: []
+    paragraphs: [
+      'In ANCA\u2019s first four years, we have already demonstrated what neighbors working together can accomplish. Now, in our fifth year, with your help, we\u2019re ready to build on that progress.',
+      'Together we can build community resilience not just to survive what\u2019s ahead, but to create a healthier, safer, and more connected community.'
+    ]
   },
 
   // Ways to give.
   //   form 'phase'   = follows the date rule above
   //   form 'contact' = opens an email to org.contactEmail (for leadership gifts and checks)
   //   hideIfSameAsMain = hide this card while it would repeat the main button's link
+  waysIntro: 'Choose steady monthly support, a one-time gift, or become an ANCA Guardian and provide major support.',
   ways: [
     { kicker: 'Monthly', title: 'Become a Climate Hero',
-      text: 'Steady monthly support lets ANCA plan ahead and keep neighborhood work going all year. One-time gifts are just as welcome on the same page.',
+      text: 'Regular monthly support helps ANCA sustain existing programs and meet increasing challenges. One-time gifts are critical as well.',
       form: 'climateHero', button: 'Give monthly or one time' },
     { kicker: 'Leadership gift', title: 'ANCA Guardian',
-      text: 'A gift of $1,000 or more at a critical time. Give online via Zeffy with zero fees, or contact us to give by check.',
+      text: 'A gift of $1,000 or more at a critical time helps ANCA strengthen and expand our programs and increase our impact.',
       form: 'guardian', button: 'Become an ANCA Guardian' },
     { kicker: 'Any amount', title: 'Make a gift',
       text: 'Every contribution is welcome.',
@@ -100,11 +104,23 @@ window.CAMPAIGN = {
     start: '2026-12-20',
     days: 12,
     blockPrefix: 'Building Block',
-    titles: { 1: 'Why neighbors', 12: 'Thank you' },
-    givingPromptDays: [3, 8, 10, 12],   // days that show a Give button
+    givingPromptDays: [2, 9, 12],   // days that show a Give button. Day 2 Food, Day 9 Zero Waste (Repair Café), Day 12 Thank you. Days 5 and 6 (Dec 24, 25) stay light.
     promptButton: 'Give today',
-    intro: 'One idea a day on building a resilient community.',
-    entries: {}
+    intro: 'One idea a day on building a resilient community, from food and water to shade and neighbors.',
+    entries: {
+      1: { title: 'Why neighbors', text: 'Climate resilience is built one neighborhood at a time. Over the next twelve days we will walk through ten building blocks of a climate-resilient community.', action: 'Say hello to a neighbor you have not talked with in a while.' },
+      2: { title: 'Local, Sustainable Food System', text: 'A local food system keeps healthy food close to home and less dependent on long supply chains. Gardens, sharing between neighbors, and local growers all strengthen it.', action: 'Buy one item today from a local grower or farmers market.' },
+      3: { title: 'Sustained Water Conservation', text: 'Every drop saved at home is one less drawn from a stressed supply. Small changes in how we water and wash add up across a whole neighborhood.', action: 'Check one sprinkler or faucet for leaks.' },
+      4: { title: 'Protection of Biodiversity', text: 'Native plants, birds, and pollinators keep our local ecosystems healthy and better able to handle heat and drought. Even a small yard or balcony can give them a home.', action: 'Choose one native plant for your yard or balcony.' },
+      5: { title: 'Disaster Preparedness at Neighborhood Level', text: 'Neighbors who know each other recover faster after an emergency. Map Your Neighborhood helps blocks make a plan before they need one.', action: 'Learn the names of the neighbors on either side of you.' },
+      6: { title: 'Localized Economy', text: 'When we spend locally, more of that money circulates in our community and supports the neighbors who make Redlands what it is.', action: 'Give a gift from a local shop or maker.' },
+      7: { title: 'Energy Efficient Homes & Businesses', text: 'Efficient buildings cost less to run and put less carbon in the air. Simple steps, from lighting to insulation, help households and small businesses alike.', action: 'Switch one bulb to LED or unplug one idle device.' },
+      8: { title: 'Localized Accessible Health Care', text: 'A resilient community has health care people can reach close to home, especially during heat waves, smoke, and other disruptions.', action: 'Check in on a neighbor who may have trouble getting care.' },
+      9: { title: 'Zero Waste Community', text: 'The best waste is the waste we never make. Repair Café shows how mending what we own saves money and keeps things out of the landfill.', action: 'Repair or reuse one item instead of throwing it away.' },
+      10: { title: 'Low Carbon Transportation System', text: 'Walking, biking, carpooling, and transit cut emissions and make our streets safer and more connected.', action: 'Walk or bike one trip you would normally drive.' },
+      11: { title: 'Cooler Homes & Neighborhoods', text: 'Shade trees, lighter surfaces, and cooler streets protect neighbors from dangerous heat and lower energy bills.', action: 'Notice where your block lacks shade and talk it over with a neighbor.' },
+      12: { title: 'Thank you', text: 'Thank you for building a more resilient Redlands with us. Your support carries this work into the new year.', action: 'Share this page with one neighbor.' }
+    }
   },
 
   // Only used if a matcher is found. Turn on and fill in.
@@ -115,21 +131,23 @@ window.CAMPAIGN = {
   programs: {
     enabled: true,
     heading: 'What ANCA does',
-    intro: '',
+    intro: 'ANCA turns climate concern into community strength by providing education on sustainable-living practices, organizing neighborhoods to be prepared for more severe climate impacts, and mobilizing local networks to plan for working in a more challenging environment. At a time when things can feel overwhelming, ANCA helps residents rediscover their capacity to care for one another and act together.',
     items: [
-      { title: 'Monthly education',
-        text: 'Programs on living more sustainably, often followed by hands-on time with composting, gardening, or tree planting. Past workshops are recorded.',
+      { title: 'Speakers\u2019 Series',
+        text: 'A monthly educational series on Resilient Living that helps our community members think more proactively about how we need to live in a future shaped by climate disruptions.',
         url: 'https://redlands-anca.hub.arcgis.com/pages/programs' },
       { title: 'Map Your Neighborhood',
-        text: 'Neighbors come together, get to know one another, and turn a conversation about preparedness into a plan.',
+        text: 'Our disaster preparedness program brings neighborhoods together to create plans for how to respond to major disasters and learn other ways to become more resilient in these uncertain times.',
         url: 'https://redlands-anca.hub.arcgis.com/pages/our-neighborhoods' },
-      { title: 'Repair Cafe',
-        text: 'Neighbors share skills and fix what they own instead of throwing it away.',
+      { title: 'Repair Caf\u00e9',
+        text: 'A popular quarterly event where skilled volunteers repair everyday items at no charge, reducing waste, saving money, and sharing skills that support sustainable living.',
         url: 'https://redlands-anca.hub.arcgis.com/pages/upcoming-events' },
       { title: 'Day of Climate Action',
-        text: 'An Earth Day celebration where local businesses and organizations host projects that help residents learn sustainable ways to live.',
-        url: 'https://redlands-anca.hub.arcgis.com/pages/programs',
-        confirm: 'The Hub page says this launched in 2023. Confirm it is still held each year.' }
+        text: 'A city-wide day of action, learning, and celebration that inspires and motivates year-round sustainable living practices.',
+        url: 'https://redlands-anca.hub.arcgis.com/pages/programs' },
+      { title: 'At-Risk Neighborhood Initiative',
+        text: 'A coalition of residents and organizations that provides neighborhoods most at-risk from climate impacts with useful information, local resources, and opportunities to participate in preparing for a more challenging future.',
+        url: 'https://redlands-anca.hub.arcgis.com/pages/programs' }
     ]
   },
 

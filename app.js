@@ -177,7 +177,7 @@
       tierRow,
       descEl,
       cardCta,
-      el('div', { class: 'hero-card-trust', text: '501(c)(3) tax-deductible · Zero platform fees' })
+      el('div', { class: 'hero-card-trust', text: 'ANCA Redlands is a 501(c)(3) nonprofit' })
     ]);
     heroGridKids.push(impactCard);
   }
@@ -220,7 +220,7 @@
     ]));
   });
   if (cards.length) {
-    var sw = section('give', '', 'Ways to give', 'Choose one-time support, steady monthly backing, or a leadership gift.');
+    var sw = section('give', '', 'Ways to give', C.waysIntro || 'Choose one-time support, steady monthly backing, or a leadership gift.');
     var gridCls = cards.length === 2 ? 'grid2' : 'grid3';
     var g = el('div', { class: gridCls }); cards.forEach(function (c) { g.appendChild(c); });
     sw.wrap.appendChild(g);
@@ -248,7 +248,7 @@
   var goal = C.goal || {};
   var match = C.match || {};
   if (td.enabled || goal.enabled || match.enabled) {
-    var sc = section('challenges', '', 'Challenges');
+    var sc = section('challenges', '', (td.enabled && !goal.enabled && !match.enabled) ? 'The 12 Days of Resilience' : 'Challenges');
     if (goal.enabled && goal.target > 0) {
       var pct = Math.max(0, Math.min(100, Math.round((goal.raised / goal.target) * 100)));
       var money = function (n) { return '$' + Number(n).toLocaleString('en-US'); };
@@ -262,8 +262,7 @@
     }
     if (td.enabled) {
       var end = addDays(td.start, td.days - 1);
-      sc.wrap.appendChild(el('h3', { text: 'The 12 Days, ' + shortDate(td.start) + ' to ' + shortDate(end).replace(/^\w+ /, '') }));
-      sc.wrap.appendChild(el('p', { class: 'lead', text: (td.intro || '') + ' A giving prompt appears on a few of the days, and the days around December 24 and 25 stay light.' }));
+      sc.wrap.appendChild(el('p', { class: 'lead', text: shortDate(td.start) + ' to ' + shortDate(end).replace(/^\w+ /, '') + '. ' + (td.intro || '') }));
       if (!isLive) {
         var pv = el('p', { class: 'preview' });
         pv.appendChild(document.createTextNode('Preview a day: '));
@@ -289,7 +288,7 @@
           if (entry.text) { kids.push(el('p', { text: entry.text })); }
           if (entry.action) { kids.push(el('p', { class: 'try', text: 'Try this: ' + entry.action })); }
           if (!entry.text && !isLive) { kids.push(el('p', { class: 'todo', text: 'Content to come' })); }
-          if (isGift) { kids.push(el('span', { class: 'prompt', text: 'Giving prompt' })); }
+          if (isGift && !isLive) { kids.push(el('span', { class: 'prompt', text: 'Giving prompt' })); }
           if (isGift && iso === today) { var gb = giveButton('dark small', td.promptButton || 'Give today', 'phase'); if (gb) { kids.push(gb); } }
         } else {
           kids.push(el('em', { text: 'Opens ' + shortDate(iso) }));
@@ -306,7 +305,7 @@
       rows.forEach(function (r) { if (r[1]) { dl.appendChild(el('dt', { text: r[0] })); dl.appendChild(el('dd', { text: r[1] })); } });
       sc.wrap.appendChild(el('div', { class: 'match' }, [el('h3', { text: 'Match' }), dl]));
     }
-    main.appendChild(sc.node); addNav('challenges', 'Challenges');
+    main.appendChild(sc.node); addNav('challenges', '12 Days');
   }
 
   // 6. SUPPORTERS (names only)
@@ -373,8 +372,7 @@
     var a = C.approved || {};
     if (!a.theme) { missing.push('Theme is a placeholder. Milan to approve the final wording.'); }
     if (!a.need) { missing.push('Statement of need not yet approved.'); }
-    if (!a.tax) { missing.push('Tax-deduction wording not yet confirmed with the CPA.'); }
-    if (!org.contactEmail) { missing.push('Contact email is empty (hidden until set). We could create an email like donate@ancainlandempire.org or giving@ancainlandempire.org and link it to someone\'s email.'); }
+    if (!org.contactEmail && (C.ways || []).some(function (w) { return w.form === 'contact'; })) { missing.push('Contact email is empty (hidden until set). We could create an email like donate@ancainlandempire.org or giving@ancainlandempire.org and link it to someone\'s email.'); }
     if (!(C.analytics && C.analytics.goatcounter)) { missing.push('Visit counting is off (optional).'); }
     if (/github\.io$/.test(location.hostname)) { missing.push('Still on the GitHub address. Do not put this link in public emails or posts until it is on the ANCA domain.'); }
     missing.push('Before going live: set status to "live" in config.js and remove the noindex line in index.html.');
