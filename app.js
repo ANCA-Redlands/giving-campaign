@@ -51,14 +51,15 @@
   var src = (qs.get('src') || qs.get('utm_source') || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40);
 
   function formKeyFor(key) { return key === 'phase' ? phase.form : key; }
-  function giveUrl(key) {
+  function giveUrl(key, content) {
     var f = (C.forms || {})[formKeyFor(key)];
     if (!f || !f.url) { return ''; }
-    if (!src) { return f.url; }
+    if (!src && !content) { return f.url; }
     try {
       var u = new URL(f.url);
-      u.searchParams.set('utm_source', src);
+      u.searchParams.set('utm_source', src || 'campaign-page');
       u.searchParams.set('utm_campaign', C.campaignId || 'campaign');
+      if (content) { u.searchParams.set('utm_content', content); }
       return u.toString();
     } catch (e) { return f.url; }
   }
@@ -68,7 +69,7 @@
     if (isLive) { return null; }
     return el('a', { class: 'btn ' + cls, 'aria-disabled': 'true', role: 'link', title: 'Link not set yet', text: label });
   }
-  function giveButton(cls, label, key) { return btnFromUrl(cls, label, giveUrl(key)); }
+  function giveButton(cls, label, key, content) { return btnFromUrl(cls, label, giveUrl(key, content)); }
   function contactUrl() {
     var e = (C.org || {}).contactEmail;
     return e ? 'mailto:' + e : '';
@@ -125,61 +126,12 @@
     C.heroNote ? el('p', { class: 'hero-note', text: C.heroNote }) : null
   ]);
 
-  var impact = C.impactTiers || {};
   var heroGridKids = [heroLeft];
-
-  if (impact.enabled && Array.isArray(impact.tiers) && impact.tiers.length) {
-    var selectedAmt = impact.defaultAmount || impact.tiers[0].amount;
-    var descEl = el('p', { class: 'impact-desc' });
-    var tierRow = el('div', { class: 'tier-pills', role: 'group', 'aria-label': 'Select a sample gift amount' });
-    var pillBtns = [];
-
-    function selectTier(tier) {
-      selectedAmt = tier.amount;
-      descEl.textContent = tier.label;
-      pillBtns.forEach(function (pb) {
-        var active = Number(pb.getAttribute('data-amt')) === selectedAmt;
-        pb.classList.toggle('active', active);
-        pb.setAttribute('aria-pressed', active ? 'true' : 'false');
-      });
-    }
-
-    impact.tiers.forEach(function (tier) {
-      var pb = el('button', {
-        type: 'button',
-        class: 'tier-pill',
-        'data-amt': String(tier.amount),
-        text: '$' + tier.amount
-      });
-      pb.addEventListener('click', function () { selectTier(tier); });
-      pillBtns.push(pb);
-      tierRow.appendChild(pb);
-    });
-
-    var customPill = el('button', {
-      type: 'button',
-      class: 'tier-pill',
-      'data-amt': '0',
-      text: 'Other'
-    });
-    customPill.addEventListener('click', function () {
-      selectTier({ amount: 0, label: 'Every dollar supports neighbor-led climate resilience right here in Redlands.' });
-    });
-    pillBtns.push(customPill);
-    tierRow.appendChild(customPill);
-
-    var initialTier = impact.tiers.filter(function (t) { return t.amount === selectedAmt; })[0] || impact.tiers[0];
-    selectTier(initialTier);
-
-    var cardCta = giveButton('primary full-btn', (phase.button || 'Give today') + ' via Zeffy', 'phase');
-    var impactCard = el('aside', { class: 'hero-card', 'aria-label': 'Gift impact preview' }, [
-      el('div', { class: 'hero-card-kicker', text: impact.heading || 'What your gift makes possible' }),
-      tierRow,
-      descEl,
-      cardCta,
-      el('div', { class: 'hero-card-trust', text: 'ANCA Redlands is a 501(c)(3) nonprofit' })
-    ]);
-    heroGridKids.push(impactCard);
+  var hp = C.hero || {};
+  if (hp.image) {
+    var fig = el('figure', { class: 'hero-photo' }, [el('img', { src: hp.image, alt: hp.alt || '', loading: 'eager' })]);
+    if (hp.credit) { fig.appendChild(el('figcaption', { text: hp.credit })); }
+    heroGridKids.push(fig);
   }
 
   var heroInner = el('div', { class: heroGridKids.length > 1 ? 'wrap hero-grid' : 'wrap' }, heroGridKids);
@@ -215,8 +167,13 @@
     var body = w.text;
     if (isContact && org.mailingAddress) { body += ' To give by check, mail it to: ' + org.mailingAddress + '.'; }
     var btn = btnFromUrl(w.form === 'guardian' || isContact ? 'outline' : 'dark', label, url);
+    var listEl = null;
+    if (w.list && w.list.length) {
+      listEl = el('ul', { class: 'gift-list' });
+      w.list.forEach(function (it) { listEl.appendChild(el('li', {}, [el('b', { text: it.amount }), document.createTextNode(' ' + it.text)])); });
+    }
     cards.push(el('article', { class: 'card' }, [
-      el('div', { class: 'kicker', text: w.kicker }), h3, el('p', { text: body }), btn
+      el('div', { class: 'kicker', text: w.kicker }), h3, el('p', { text: body }), listEl, btn
     ]));
   });
   if (cards.length) {
@@ -238,6 +195,7 @@
       if (!isLive && it.confirm) { h.appendChild(el('span', { class: 'flag', text: 'to confirm' })); missing.push('Confirm: ' + it.title + '. ' + it.confirm); }
       pg.appendChild(el('article', { class: 'card' }, [h, el('p', { text: it.text || '' }), it.url ? el('a', { class: 'more', href: it.url, rel: 'noopener', text: 'Learn more →' }) : null]));
     });
+    if (pr.moreLink && pr.moreLink.url) { pg.appendChild(el('div', { class: 'more-tile' }, [el('a', { class: 'more', href: pr.moreLink.url, rel: 'noopener', text: pr.moreLink.label || 'Learn more' })])); }
     sp.wrap.appendChild(pg);
     main.appendChild(sp.node); addNav('programs', 'What we do');
     if (!isLive && !(C.approved || {}).programs) { missing.push('"What ANCA does" descriptions are drawn from the Hub Programs page. Confirm they are current.'); }
@@ -289,7 +247,7 @@
           if (entry.action) { kids.push(el('p', { class: 'try', text: 'Try this: ' + entry.action })); }
           if (!entry.text && !isLive) { kids.push(el('p', { class: 'todo', text: 'Content to come' })); }
           if (isGift && !isLive) { kids.push(el('span', { class: 'prompt', text: 'Giving prompt' })); }
-          if (isGift && iso === today) { var gb = giveButton('dark small', td.promptButton || 'Give today', 'phase'); if (gb) { kids.push(gb); } }
+          if (isGift && iso === today) { var gb = giveButton('dark small', td.promptButton || 'Give today', 'phase', 'day-' + i); if (gb) { kids.push(gb); } }
         } else {
           kids.push(el('em', { text: 'Opens ' + shortDate(iso) }));
         }

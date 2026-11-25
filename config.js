@@ -32,7 +32,7 @@ window.CAMPAIGN = {
   // Placeholder theme (Linda's suggestion). Milan decides the final wording.
   theme: {
     headline: 'Give the Gift of a Resilient Future',
-    subline: 'For the Redlands we love. For the generations to come.'
+    subline: 'For the Redlands we love.\nFor the generations to come.'
   },
 
   // Zeffy form addresses. Paste each full link. Empty means the button is hidden on the live page.
@@ -54,19 +54,9 @@ window.CAMPAIGN = {
   // Small line under the main button. Leave empty to hide.
   heroNote: 'On the next page you can give once or monthly.',
 
-  // Tangible gift anchors shown in the hero card so donors can picture what their gift supports.
-  // Set enabled: false to hide, or adjust amounts/labels once approved.
-  impactTiers: {
-    enabled: true,
-    heading: 'What your gift makes possible',
-    defaultAmount: 50,
-    tiers: [
-      { amount: 25,  label: 'Provides program materials for 2 Speakers\u2019 Series events.' },
-      { amount: 50,  label: 'Supplies Map Your Neighborhood workbooks for one neighborhood.' },
-      { amount: 100, label: 'Covers expenses for 3 Map Your Neighborhood follow-up meetings that help neighborhoods strengthen their plans and get better acquainted.' },
-      { amount: 250, label: 'Gets one more neighborhood disaster-prepared with a Map Your Neighborhood event.' }
-    ]
-  },
+  // Photo on the right of the top banner. Put the file in assets/ and set image. Leave image empty for a text-only banner.
+  // credit: a short line shown under the photo (needed for most Creative Commons licenses).
+  hero: { image: '', alt: '', credit: '' },
 
   // The story of the need and the ask. Take it from Linda's approved letter. Empty hides the section.
   need: {
@@ -83,15 +73,21 @@ window.CAMPAIGN = {
   //   hideIfSameAsMain = hide this card while it would repeat the main button's link
   waysIntro: 'Choose steady monthly support, a one-time gift, or become an ANCA Guardian and provide major support.',
   ways: [
+    { kicker: 'One time', title: 'Give today',
+      text: 'Any amount helps. Here is what a gift can do:',
+      list: [
+        { amount: '$25',  text: 'Provides program materials for 2 Speakers\u2019 Series events.' },
+        { amount: '$50',  text: 'Supplies Map Your Neighborhood workbooks for one neighborhood.' },
+        { amount: '$100', text: 'Covers expenses for 3 Map Your Neighborhood follow-up meetings that help neighborhoods strengthen their plans and get better acquainted.' },
+        { amount: '$250', text: 'Gets one more neighborhood disaster-prepared with a Map Your Neighborhood event.' }
+      ],
+      form: 'phase', button: 'Give today' },
     { kicker: 'Monthly', title: 'Become a Climate Hero',
       text: 'Regular monthly support helps ANCA sustain existing programs and meet increasing challenges. One-time gifts are critical as well.',
       form: 'climateHero', button: 'Give monthly or one time' },
     { kicker: 'Leadership gift', title: 'ANCA Guardian',
       text: 'A gift of $1,000 or more at a critical time helps ANCA strengthen and expand our programs and increase our impact.',
-      form: 'guardian', button: 'Become an ANCA Guardian' },
-    { kicker: 'Any amount', title: 'Make a gift',
-      text: 'Every contribution is welcome.',
-      form: 'phase', button: 'Give today', hideIfSameAsMain: true }
+      form: 'guardian', button: 'Become an ANCA Guardian' }
   ],
 
   // Optional goal display, updated by hand for now. Turn on when a goal is ready.
@@ -132,22 +128,23 @@ window.CAMPAIGN = {
     enabled: true,
     heading: 'What ANCA does',
     intro: 'ANCA turns climate concern into community strength by providing education on sustainable-living practices, organizing neighborhoods to be prepared for more severe climate impacts, and mobilizing local networks to plan for working in a more challenging environment. At a time when things can feel overwhelming, ANCA helps residents rediscover their capacity to care for one another and act together.',
+    moreLink: { label: 'Learn more \u2192', url: 'https://redlands-anca.hub.arcgis.com/pages/programs' },
     items: [
       { title: 'Speakers\u2019 Series',
         text: 'A monthly educational series on Resilient Living that helps our community members think more proactively about how we need to live in a future shaped by climate disruptions.',
-        url: 'https://redlands-anca.hub.arcgis.com/pages/programs' },
+        url: '' },
       { title: 'Map Your Neighborhood',
         text: 'Our disaster preparedness program brings neighborhoods together to create plans for how to respond to major disasters and learn other ways to become more resilient in these uncertain times.',
-        url: 'https://redlands-anca.hub.arcgis.com/pages/our-neighborhoods' },
+        url: 'https://redlands-anca.hub.arcgis.com/pages/map-your-neighborhood~3163fbe8118c4d04b23f395bf96cc88c' },
       { title: 'Repair Caf\u00e9',
         text: 'A popular quarterly event where skilled volunteers repair everyday items at no charge, reducing waste, saving money, and sharing skills that support sustainable living.',
-        url: 'https://redlands-anca.hub.arcgis.com/pages/upcoming-events' },
+        url: 'https://redlands-anca.hub.arcgis.com/pages/0d973637c2b344b99620af238f04b6d9' },
       { title: 'Day of Climate Action',
         text: 'A city-wide day of action, learning, and celebration that inspires and motivates year-round sustainable living practices.',
-        url: 'https://redlands-anca.hub.arcgis.com/pages/programs' },
+        url: '' },
       { title: 'At-Risk Neighborhood Initiative',
         text: 'A coalition of residents and organizations that provides neighborhoods most at-risk from climate impacts with useful information, local resources, and opportunities to participate in preparing for a more challenging future.',
-        url: 'https://redlands-anca.hub.arcgis.com/pages/programs' }
+        url: '' }
     ]
   },
 
