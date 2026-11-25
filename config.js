@@ -74,13 +74,7 @@ window.CAMPAIGN = {
   waysIntro: 'Choose steady monthly support, a one-time gift, or become an ANCA Guardian and provide major support.',
   ways: [
     { kicker: 'One time', title: 'Give today',
-      text: 'Any amount helps. Here is what a gift can do:',
-      list: [
-        { amount: '$25',  text: 'Provides program materials for 2 Speakers\u2019 Series events.' },
-        { amount: '$50',  text: 'Supplies Map Your Neighborhood workbooks for one neighborhood.' },
-        { amount: '$100', text: 'Covers expenses for 3 Map Your Neighborhood follow-up meetings that help neighborhoods strengthen their plans and get better acquainted.' },
-        { amount: '$250', text: 'Gets one more neighborhood disaster-prepared with a Map Your Neighborhood event.' }
-      ],
+      text: 'A one-time gift of any amount. Every contribution is welcome.',
       form: 'phase', button: 'Give today' },
     { kicker: 'Monthly', title: 'Become a Climate Hero',
       text: 'Regular monthly support helps ANCA sustain existing programs and meet increasing challenges. One-time gifts are critical as well.',
@@ -138,10 +132,10 @@ window.CAMPAIGN = {
         url: 'https://redlands-anca.hub.arcgis.com/pages/map-your-neighborhood~3163fbe8118c4d04b23f395bf96cc88c' },
       { title: 'Repair Caf\u00e9',
         text: 'A popular quarterly event where skilled volunteers repair everyday items at no charge, reducing waste, saving money, and sharing skills that support sustainable living.',
-        url: 'https://redlands-anca.hub.arcgis.com/pages/0d973637c2b344b99620af238f04b6d9' },
+        url: 'https://redlands-anca.hub.arcgis.com/pages/ecohub~0d973637c2b344b99620af238f04b6d9' },
       { title: 'Day of Climate Action',
         text: 'A city-wide day of action, learning, and celebration that inspires and motivates year-round sustainable living practices.',
-        url: '' },
+        url: 'https://www.redlandsearthday.org/home' },
       { title: 'At-Risk Neighborhood Initiative',
         text: 'A coalition of residents and organizations that provides neighborhoods most at-risk from climate impacts with useful information, local resources, and opportunities to participate in preparing for a more challenging future.',
         url: '' }
