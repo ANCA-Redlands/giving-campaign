@@ -162,3 +162,5 @@ footer .social a{margin-right:14px}
 .gift-list b{color:var(--navy-900);margin-right:4px}
 .more-tile{display:flex;align-items:center;padding:0 8px}
 .more-tile a.more{font-weight:700;font-size:17px}
+
+.card p{white-space:pre-line}

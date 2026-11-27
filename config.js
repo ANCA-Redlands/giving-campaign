@@ -73,7 +73,7 @@ window.CAMPAIGN = {
   waysIntro: 'Choose a one-time gift, steady monthly giving, or become an ANCA Guardian and provide major support.',
   ways: [
     { kicker: 'One time', title: 'Give today',
-      text: 'A one-time gift of any amount. Every contribution is welcome.',
+      text: 'A one-time gift of any amount is\nalways welcome.\nEvery contribution is appreciated.',
       form: 'phase', button: 'Give today' },
     { kicker: 'Monthly', title: 'Become a Climate Hero',
       text: 'Regular monthly support helps ANCA sustain existing programs and meet increasing challenges.',
