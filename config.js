@@ -55,7 +55,7 @@ window.CAMPAIGN = {
 
   // Photo on the right of the top banner. Put the file in assets/ and set image. Leave image empty for a text-only banner.
   // credit: a short line shown under the photo (needed for most Creative Commons licenses).
-  hero: { image: 'assets/hero.jpg', alt: 'An older person\u2019s hands holding a young seedling in soil, with a child\u2019s hands reaching toward it', credit: '' },
+  hero: { image: 'hero.jpg', alt: 'An older person\u2019s hands holding a young seedling in soil, with a child\u2019s hands reaching toward it', credit: '' },
 
   // The story of the need and the ask. Take it from Linda's approved letter. Empty hides the section.
   need: {
