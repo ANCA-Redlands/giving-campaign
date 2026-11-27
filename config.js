@@ -32,7 +32,7 @@ window.CAMPAIGN = {
   // Placeholder theme (Linda's suggestion). Milan decides the final wording.
   theme: {
     headline: 'Give the Gift of a Resilient Future',
-    subline: 'For the Redlands we love.\nFor the generations to come.'
+    subline: 'For the Redlands we love\nFor the generations to come'
   },
 
   // Zeffy form addresses. Paste each full link. Empty means the button is hidden on the live page.
@@ -46,21 +46,20 @@ window.CAMPAIGN = {
   // Which form the main button uses, by date. The first matching row wins.
   phases: [
     { id: 'givingTuesday', from: '2026-12-01', to: '2026-12-01', form: 'givingTuesday', tag: 'Giving Tuesday', button: 'Give on Giving Tuesday' },
-    { id: 'twelveDays',    from: '2026-12-20', to: '2026-12-31', form: 'yearEnd',       tag: 'The 12 Days',    button: 'Give today' },
     { id: 'afterCampaign', from: '2027-01-01', to: '2099-12-31', form: 'climateHero',   tag: 'Thank you',      button: 'Become a Climate Hero' },
     { id: 'yearEnd',       from: '2000-01-01', to: '2099-12-31', form: 'yearEnd',       tag: 'Year-end campaign', button: 'Give today' }
   ],
 
   // Small line under the main button. Leave empty to hide.
-  heroNote: 'On the next page you can give once or monthly.',
+  heroNote: '',
 
   // Photo on the right of the top banner. Put the file in assets/ and set image. Leave image empty for a text-only banner.
   // credit: a short line shown under the photo (needed for most Creative Commons licenses).
-  hero: { image: '', alt: '', credit: '' },
+  hero: { image: 'assets/hero.jpg', alt: 'An older person\u2019s hands holding a young seedling in soil, with a child\u2019s hands reaching toward it', credit: '' },
 
   // The story of the need and the ask. Take it from Linda's approved letter. Empty hides the section.
   need: {
-    heading: 'Why we are asking',
+    heading: 'Why we\u2019re asking',
     paragraphs: [
       'In ANCA\u2019s first four years, we have already demonstrated what neighbors working together can accomplish. Now, in our fifth year, with your help, we\u2019re ready to build on that progress.',
       'Together we can build community resilience not just to survive what\u2019s ahead, but to create a healthier, safer, and more connected community.'
@@ -71,13 +70,13 @@ window.CAMPAIGN = {
   //   form 'phase'   = follows the date rule above
   //   form 'contact' = opens an email to org.contactEmail (for leadership gifts and checks)
   //   hideIfSameAsMain = hide this card while it would repeat the main button's link
-  waysIntro: 'Choose steady monthly support, a one-time gift, or become an ANCA Guardian and provide major support.',
+  waysIntro: 'Choose a one-time gift, steady monthly giving, or become an ANCA Guardian and provide major support.',
   ways: [
     { kicker: 'One time', title: 'Give today',
-      text: 'A one-time gift of any amount. Every contribution is welcome.',
+      text: 'A one-time gift of any amount is always welcome. Every contribution is appreciated.',
       form: 'phase', button: 'Give today' },
     { kicker: 'Monthly', title: 'Become a Climate Hero',
-      text: 'Regular monthly support helps ANCA sustain existing programs and meet increasing challenges. One-time gifts are critical as well.',
+      text: 'Regular monthly support helps ANCA sustain existing programs and meet increasing challenges.',
       form: 'climateHero', button: 'Give monthly or one time' },
     { kicker: 'Leadership gift', title: 'ANCA Guardian',
       text: 'A gift of $1,000 or more at a critical time helps ANCA strengthen and expand our programs and increase our impact.',
@@ -90,7 +89,7 @@ window.CAMPAIGN = {
   // The 12 Days. Each day opens on its date and shows its content. Future days show only the date.
   // Add content as entries keyed by day number: 1: { title: '', text: '', action: '' }
   twelveDays: {
-    enabled: true,
+    enabled: false,   // switched off. The day-by-day copy below is kept for next year or for social posts.
     start: '2026-12-20',
     days: 12,
     blockPrefix: 'Building Block',
@@ -148,7 +147,6 @@ window.CAMPAIGN = {
   // Other ways to help. Empty url hides the button on the live page. 'share' copies or shares this page's link.
   help: [
     { label: 'Volunteer',       url: 'https://redlands-anca.hub.arcgis.com/pages/get-involved' },
-    { label: 'Join an event',   url: 'https://redlands-anca.hub.arcgis.com/pages/upcoming-events' },
     { label: 'Share this page', url: 'share' }
   ],
 

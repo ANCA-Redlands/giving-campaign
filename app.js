@@ -114,7 +114,7 @@
   var heroBtns = el('div', { class: 'cta-row' });
   var b1 = giveButton('primary', phase.button, 'phase');
   var heroUrl = giveUrl('climateHero');
-  var b2 = (phase.form !== 'climateHero' && (!heroUrl || heroUrl !== giveUrl('phase'))) ? giveButton('ghost', 'Become a monthly Climate Hero', 'climateHero') : null;
+  var b2 = (phase.form !== 'climateHero' && (!heroUrl || heroUrl !== giveUrl('phase'))) ? giveButton('ghost', 'Become a Monthly Climate Hero', 'climateHero') : null;
   if (b1) { heroBtns.appendChild(b1); }
   if (b2) { heroBtns.appendChild(b2); }
 
@@ -141,13 +141,13 @@
   var need = C.need || {};
   var needParas = (need.paragraphs || []).filter(Boolean);
   if (needParas.length) {
-    var sn = section('need', 'alt', need.heading || 'Why we are asking');
+    var sn = section('need', 'alt', need.heading || 'Why we\u2019re asking');
     var prose = el('div', { class: 'prose' });
     needParas.forEach(function (p) { prose.appendChild(el('p', { text: p })); });
     sn.wrap.appendChild(prose);
     main.appendChild(sn.node); addNav('need', 'Why we ask');
   } else if (!isLive) {
-    var sn2 = section('need', 'alt', need.heading || 'Why we are asking');
+    var sn2 = section('need', 'alt', need.heading || 'Why we\u2019re asking');
     sn2.wrap.appendChild(el('div', { class: 'slot', text: 'Statement of need goes here, taken from Linda\'s approved letter. Add it to config.js under need.paragraphs.' }));
     main.appendChild(sn2.node); addNav('need', 'Why we ask');
     missing.push('Statement of need (from Linda\'s letter) is empty.');
@@ -166,7 +166,7 @@
     if (!isLive && w.confirm) { h3.appendChild(el('span', { class: 'flag', text: 'to confirm' })); missing.push('Confirm: ' + w.title + '.' + (typeof w.confirm === 'string' ? ' ' + w.confirm : '')); }
     var body = w.text;
     if (isContact && org.mailingAddress) { body += ' To give by check, mail it to: ' + org.mailingAddress + '.'; }
-    var btn = btnFromUrl(w.form === 'guardian' || isContact ? 'outline' : 'dark', label, url);
+    var btn = btnFromUrl('dark', label, url);
     var listEl = null;
     if (w.list && w.list.length) {
       listEl = el('ul', { class: 'gift-list' });
