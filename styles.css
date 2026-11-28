@@ -164,3 +164,14 @@ footer .social a{margin-right:14px}
 .more-tile a.more{font-weight:700;font-size:17px}
 
 .card p{white-space:pre-line}
+
+.letter-more{margin-top:4px}
+.letter-more summary{cursor:pointer;font-weight:700;color:var(--navy-700);padding:6px 0;list-style:none}
+.letter-more summary::-webkit-details-marker{display:none}
+.letter-more summary:after{content:" \25BE"}
+.letter-more[open] summary{margin-bottom:12px}
+.letter-more[open] summary:after{content:" \25B4"}
+.letter .sign{margin-top:8px}
+.prose ul{margin:0 0 16px;padding-left:22px;font-size:17.5px;line-height:1.6;max-width:66ch}
+.prose li{margin-bottom:8px}
+.letter-cta{margin-top:22px}

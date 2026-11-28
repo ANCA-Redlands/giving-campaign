@@ -140,7 +140,34 @@
   // 2. WHY WE ARE ASKING (Need)
   var need = C.need || {};
   var needParas = (need.paragraphs || []).filter(Boolean);
-  if (needParas.length) {
+  var L = need.letter;
+  if (L && L.enabled && L.blocks && L.blocks.length) {
+    // Giving Tuesday letter: opening shown, the rest folds behind "Read the full letter".
+    var sl = section('need', 'alt', need.heading || 'Why we\u2019re asking');
+    var lbox = el('div', { class: 'prose letter' });
+    var blockEl = function (b) {
+      if (b.list) { var ul = el('ul'); b.list.forEach(function (t) { ul.appendChild(el('li', { text: t })); }); return ul; }
+      return el('p', { text: b.p });
+    };
+    var cut = L.visibleBlocks || 3;
+    L.blocks.slice(0, cut).forEach(function (b) { lbox.appendChild(blockEl(b)); });
+    var rest = L.blocks.slice(cut);
+    if (rest.length || (L.signoff && L.signoff.length)) {
+      var det = el('details', { class: 'letter-more' });
+      det.appendChild(el('summary', { text: L.moreLabel || 'Read the full letter' }));
+      rest.forEach(function (b) { det.appendChild(blockEl(b)); });
+      if (L.signoff && L.signoff.length) {
+        var sg = el('p', { class: 'sign' });
+        L.signoff.forEach(function (line, i) { if (i) { sg.appendChild(document.createElement('br')); } sg.appendChild(document.createTextNode(line)); });
+        det.appendChild(sg);
+      }
+      lbox.appendChild(det);
+    }
+    sl.wrap.appendChild(lbox);
+    var lcta = giveButton('primary', L.button || 'Give today', 'phase');
+    if (lcta) { sl.wrap.appendChild(el('div', { class: 'letter-cta' }, [lcta])); }
+    main.appendChild(sl.node); addNav('need', 'Why we ask');
+  } else if (needParas.length) {
     var sn = section('need', 'alt', need.heading || 'Why we\u2019re asking');
     var prose = el('div', { class: 'prose' });
     needParas.forEach(function (p) { prose.appendChild(el('p', { text: p })); });

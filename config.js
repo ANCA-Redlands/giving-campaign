@@ -60,6 +60,29 @@ window.CAMPAIGN = {
   // The story of the need and the ask. Take it from Linda's approved letter. Empty hides the section.
   need: {
     heading: 'Why we\u2019re asking',
+    // Giving Tuesday letter from Linda. Set enabled to false after Tuesday and the two paragraphs below show again.
+    letter: {
+      enabled: true,
+      visibleBlocks: 3,           // paragraphs shown before "Read the full letter"
+      moreLabel: 'Read the full letter',
+      button: 'Donate here for a more resilient Redlands',
+      blocks: [
+        { p: 'Dear Friends,' },
+        { p: 'This Giving Tuesday, I\u2019d like to share why a gift to ANCA Redlands matters to you, your children, and future generations.' },
+        { p: 'As severe weather and other climate-related challenges intensify, we can prepare by strengthening our community, starting in our own neighborhoods, where each of us can make a meaningful difference. That is the heart of ANCA Redlands\u2019 work.' },
+        { p: 'Guided by a comprehensive plan for building community resilience, ANCA has spent the past four years helping residents understand the challenges ahead and take practical action. Thanks to our amazing volunteers, we have offered the following programs at no charge to the public:' },
+        { list: [
+          '31 monthly speaker events exploring climate-related challenges and practical solutions;',
+          '10 quarterly Repair Caf\u00e9s, where skilled volunteers repair items at no charge while demonstrating the environmental value of reuse; and',
+          'Four annual community-wide Days of Climate Action celebrating Earth Day by engaging residents in hands-on projects, learning new skills, and connecting with resources for a more resilient future.'
+        ] },
+        { p: 'Our neighborhood work to date has focused on disaster preparedness. Eighty-seven (87) neighborhoods have created detailed plans for working together during a major emergency. Soon, ANCA will launch a program to help residents grow and share more food locally. This is all part of building local resilience.' },
+        { p: 'At the center of our neighborhood work is something even more essential for our future: stronger relationships among neighbors. Resilience is strengthened when neighbors work together to prepare for disasters, grow food, conserve water, protect biodiversity, and face future challenges together.' },
+        { p: 'What we do today can help ensure a safer, healthier, more livable future for ourselves, our children, and the generations to come who will inherit the consequences of the choices we make today.' },
+        { p: 'Please make a Giving Tuesday gift to sustain and expand this important work: the gift of a more resilient future for the Redlands we love and for generations to come.' }
+      ],
+      signoff: ['With gratitude,', 'Linda Hamilton', 'Executive Director', 'ANCA Redlands']
+    },
     paragraphs: [
       'In ANCA\u2019s first four years, we have already demonstrated what neighbors working together can accomplish. Now, in our fifth year, with your help, we\u2019re ready to build on that progress.',
       'Together we can build community resilience not just to survive what\u2019s ahead, but to create a healthier, safer, and more connected community.'
